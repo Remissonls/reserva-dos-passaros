@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F26522"/>
+      <stop offset="100%" stop-color="#D84F10"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <!-- Background Rounded Squircle -->
+  <rect width="512" height="512" rx="128" fill="#102B4E"/>
+  <circle cx="256" cy="256" r="190" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  <!-- Dove Silhouette -->
+  <path fill="#FFFFFF" transform="translate(136, 136) scale(0.47)" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 195.6c-18.7-7-39.1-11.6-60.6-11.6c-48.4 0-92.4 22.3-121.4 57.4C18.2 299.7 0 334.8 0 373.3C0 449.9 62.1 512 138.7 512c58.2 0 108.5-36 129.4-87.1c8.3-20.3 12.9-42.5 12.9-65.7l0-141.6c18.7 7 39.1 11.6 60.6 11.6c48.4 0 92.4-22.3 121.4-57.4C485.8 147.7 504 112.6 504 74.1C504 33.2 470.8 0 429.9 0c-38.5 0-73.6 18.2-96.9 46.9C304 81.9 288 125.9 288 174.3l0-142.3z"/>
+</svg>

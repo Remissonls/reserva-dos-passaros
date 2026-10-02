@@ -1,0 +1,115 @@
+/* ==========================================================================
+   Portal do Morador - Residencial Reserva dos Pássaros
+   Estilos Personalizados & Ajustes de Interface
+   ========================================================================== */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
+}
+
+/* Safe areas para celulares com notch ou barra inferior (iOS / Android) */
+.pb-safe { 
+    padding-bottom: max(16px, env(safe-area-inset-bottom)); 
+}
+.pt-safe { 
+    padding-top: max(16px, env(safe-area-inset-top)); 
+}
+
+/* Barra de rolagem discreta e elegante */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+
+/* Efeito tátil de clique em cards e botões interativos */
+.card-press {
+    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.card-press:active {
+    transform: scale(0.97);
+}
+
+/* Transições e visibilidade das abas do painel */
+.tab-content {
+    display: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+.tab-content.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Estilos de transição e ativo na barra de navegação inferior */
+.nav-item {
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+.nav-item.active {
+    color: #F26522 !important;
+    font-weight: 600;
+}
+.nav-item.active i {
+    transform: translateY(-2px) scale(1.12);
+}
+
+/* Animações dos modais (bottom-sheet no mobile / modal central no desktop) */
+.modal-overlay {
+    transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+}
+.modal-content {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+.modal-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.modal-hidden .modal-content {
+    transform: translateY(100%);
+}
+.modal-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+.modal-visible .modal-content {
+    transform: translateY(0);
+}
+
+/* Efeito de pulso para o badge de aviso novo */
+@keyframes pulse-ring {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.25); opacity: 0.3; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+.pulse-dot {
+    position: relative;
+}
+.pulse-dot::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    background-color: currentColor;
+    animation: pulse-ring 2s infinite ease-in-out;
+}
+
+/* Animação suave de destaque ao selecionar um item pela busca */
+@keyframes item-highlight {
+    0% { background-color: rgba(242, 101, 34, 0.25); transform: scale(1.02); }
+    100% { background-color: inherit; transform: scale(1); }
+}
+.highlight-pulse {
+    animation: item-highlight 1.5s ease-out;
+}

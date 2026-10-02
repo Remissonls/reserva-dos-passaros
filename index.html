@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#102B4E">
+    <meta name="description" content="Portal oficial informativo para moradores do Residencial Reserva dos Pássaros. Avisos, regras, contatos e internet.">
+    <title>Portal do Morador - Reserva dos Pássaros</title>
+
+    <!-- PWA Web App Manifest & Ícones -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuração Personalizada do Tailwind -->
+    <script src="js/tailwind-config.js"></script>
+
+    <!-- FontAwesome 6 Pro/Free Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Estilos Customizados da Aplicação -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-200 text-slate-800 antialiased h-full flex flex-col justify-center items-center select-none md:p-4">
+
+    <div class="w-full max-w-md bg-slate-50 h-full md:h-[95vh] md:max-h-[920px] md:rounded-[2.5rem] flex flex-col overflow-hidden relative shadow-2xl md:border-4 md:border-slate-800/80">
+
+        <!-- ==================== TOPO / HEADER ==================== -->
+        <header class="bg-brand-blue text-white pt-safe px-5 pb-4 z-20 rounded-b-[1.75rem] shadow-lg flex-shrink-0 relative overflow-hidden">
+            <!-- Elementos decorativos de fundo -->
+            <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-brand-orange/15 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute left-1/3 -top-6 w-24 h-24 bg-sky-400/10 rounded-full blur-xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between mt-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-orange to-brand-orangeDark flex items-center justify-center text-white shadow-md shadow-brand-orange/30">
+                        <i class="fa-solid fa-dove text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-base font-bold tracking-tight text-white leading-tight">Reserva dos Pássaros</h1>
+                            <span class="text-[9px] bg-emerald-500/25 text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-400/30 uppercase tracking-wide">Novo</span>
+                        </div>
+                        <p class="text-xs text-slate-300 font-light flex items-center gap-1.5 mt-0.5">
+                            <i class="fa-solid fa-location-dot text-[10px] text-brand-orange"></i> Portal Oficial do Morador
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="openShareModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition text-sm" title="Compartilhar no WhatsApp">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+                    <button onclick="triggerPwaInstall()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition text-sm" title="Instalar aplicativo no celular ou PC">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Campo de Busca Instantânea -->
+            <div class="mt-3.5 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input 
+                    type="text" 
+                    id="global-search" 
+                    placeholder="Buscar provedores, regras de furos, lixo, água..." 
+                    oninput="handleSearch(this.value)"
+                    class="w-full bg-slate-900/60 text-white placeholder-slate-400 text-xs rounded-xl pl-9 pr-8 py-2.5 outline-none border border-white/15 focus:border-brand-orange/80 focus:bg-slate-900/90 transition shadow-inner"
+                />
+                <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- ==================== BANNER DE INSTALAÇÃO PWA (Nativo) ==================== -->
+        <div id="pwa-install-banner" class="hidden px-4 pt-3 flex-shrink-0 transition">
+            <div class="bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white p-3 rounded-2xl shadow-md flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-base flex-shrink-0">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold leading-tight">Instalar Aplicativo</h4>
+                        <p class="text-[10px] text-white/90">Acesse com 1 toque na tela inicial</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <button onclick="triggerPwaInstall()" class="card-press bg-white text-brand-orange text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                        Instalar
+                    </button>
+                    <button onclick="dismissInstallBanner()" class="text-white/80 hover:text-white p-1 text-xs" title="Dispensar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== STATUS RÁPIDO DO CONDOMÍNIO ==================== -->
+        <section class="px-4 pt-3 flex-shrink-0">
+            <div class="bg-white border border-slate-200/90 rounded-2xl p-2.5 shadow-sm grid grid-cols-4 gap-1 text-center">
+                <div class="flex flex-col items-center justify-center p-1 border-r border-slate-100">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/80"></span>
+                        <span class="text-[10px] font-bold text-slate-700">Água</span>
+                    </div>
+                    <span class="text-[9px] text-emerald-600 font-medium bg-emerald-50 px-1.5 py-0.5 rounded">Regular</span>
+                </div>
+
+                <div class="flex flex-col items-center justify-center p-1 border-r border-slate-100">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/80"></span>
+                        <span class="text-[10px] font-bold text-slate-700">Portaria</span>
+                    </div>
+                    <span class="text-[9px] text-emerald-600 font-medium bg-emerald-50 px-1.5 py-0.5 rounded">24 Horas</span>
+                </div>
+
+                <div class="flex flex-col items-center justify-center p-1 border-r border-slate-100">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 shadow-sm shadow-amber-500/80"></span>
+                        <span class="text-[10px] font-bold text-slate-700">Mudanças</span>
+                    </div>
+                    <span class="text-[9px] text-amber-600 font-medium bg-amber-50 px-1 py-0.5 rounded">Agendar</span>
+                </div>
+
+                <div class="flex flex-col items-center justify-center p-1">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 shadow-sm shadow-sky-500/80"></span>
+                        <span class="text-[10px] font-bold text-slate-700">Lixo</span>
+                    </div>
+                    <span class="text-[9px] text-slate-600 font-medium bg-slate-100 px-1.5 py-0.5 rounded">19:00h</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CONTEÚDO PRINCIPAL (COM SCROLL) ==================== -->
+        <main class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-slate-800 pb-28" id="main-scroll-view">
+
+            <!-- Painel Dinâmico de Resultados da Busca -->
+            <div id="search-results-box" class="hidden bg-white border-2 border-brand-orange/40 rounded-2xl p-3 shadow-md space-y-2">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <p class="text-xs font-bold text-brand-blue flex items-center gap-1.5">
+                        <i class="fa-solid fa-filter text-brand-orange"></i> Resultados da Busca
+                    </p>
+                    <span id="search-count" class="text-[10px] text-slate-400 font-medium">0 encontrados</span>
+                </div>
+                <div id="search-items-container" class="space-y-2 text-xs divide-y divide-slate-100">
+                    <!-- Itens inseridos dinamicamente via JS -->
+                </div>
+            </div>
+
+            <!-- ==================== ABA 1: INÍCIO (DASHBOARD) ==================== -->
+            <div id="tab-home" class="tab-content active space-y-4">
+                
+                <!-- Banner: Recém-Entregue -->
+                <div class="bg-gradient-to-r from-brand-blue to-brand-blueLight text-white p-4 rounded-2xl shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full pointer-events-none"></div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center flex-shrink-0 text-brand-orange text-lg">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-orange text-white px-2 py-0.5 rounded-full">Recém-Entregue</span>
+                                <span class="text-[11px] text-slate-300">Outubro / 2026</span>
+                            </div>
+                            <h2 class="text-sm font-bold text-white">Parabéns pela conquista do seu imóvel!</h2>
+                            <p class="text-xs text-slate-200 leading-relaxed">
+                                Siga o checklist abaixo para ligar seus serviços essenciais e evitar multas de mudança.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas & Telefones -->
+                <div>
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-brand-orange"></i> Ações Rápidas & Contatos
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="openPortariaModal()" class="card-press bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-brand-blue flex items-center justify-center text-lg flex-shrink-0">
+                                <i class="fa-solid fa-phone-volume"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-brand-blue block">Portaria</span>
+                                <span class="text-[10px] text-slate-500">Ramal e Interfone</span>
+                            </div>
+                        </button>
+
+                        <button onclick="openSindicoModal()" class="card-press bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-brand-blue block">Síndico</span>
+                                <span class="text-[10px] text-slate-500">Tirar Dúvidas</span>
+                            </div>
+                        </button>
+
+                        <button onclick="openPixModal()" class="card-press bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg flex-shrink-0">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-brand-blue block">Taxa Condomínio</span>
+                                <span class="text-[10px] text-slate-500">PIX & 2ª Via</span>
+                            </div>
+                        </button>
+
+                        <button onclick="openEmergenciaModal()" class="card-press bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg flex-shrink-0">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-brand-blue block">Emergência</span>
+                                <span class="text-[10px] text-slate-500">Polícia, SAMU, Bombeiros</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Checklist dos Primeiros Passos -->
+                <div>
+                    <div class="flex items-center justify-between mb-2 px-1">
+                        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-brand-orange"></i> Primeiros Passos da Casa Nova
+                        </h3>
+                        <span class="text-[10px] font-semibold text-brand-orange">Checklist Essencial</span>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100 overflow-hidden">
+                        <!-- Etapa 1 -->
+                        <div id="step-luz" class="p-3.5 flex items-start gap-3 transition">
+                            <div class="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</div>
+                            <div class="space-y-1 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-xs font-bold text-brand-blue">Ligação de Energia Elétrica</h4>
+                                    <span class="text-[9px] bg-slate-100 text-slate-600 font-medium px-1.5 py-0.5 rounded">Equatorial AL</span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 leading-snug">
+                                    Tenha em mãos seu RG, CPF e o contrato com o número do medidor/número da casa. O pedido pode ser feito pelo WhatsApp oficial da distribuidora.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Etapa 2 -->
+                        <div id="step-portaria" class="p-3.5 flex items-start gap-3 transition">
+                            <div class="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</div>
+                            <div class="space-y-1 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-xs font-bold text-brand-blue">Cadastro na Portaria</h4>
+                                    <span class="text-[9px] bg-emerald-50 text-emerald-700 font-medium px-1.5 py-0.5 rounded">Obrigatório</span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 leading-snug">
+                                    Compareça à portaria com o documento de entrega das chaves da construtora para cadastrar moradores, veículos e placas para liberação da cancela.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Etapa 3 -->
+                        <div id="step-mudanca" class="p-3.5 flex items-start gap-3 transition">
+                            <div class="w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</div>
+                            <div class="space-y-1 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-xs font-bold text-brand-blue">Agendamento de Mudança</h4>
+                                    <span class="text-[9px] bg-amber-50 text-amber-700 font-medium px-1.5 py-0.5 rounded">Regra do Condomínio</span>
+                                </div>
+                                <p class="text-[11px] text-slate-600 leading-snug">
+                                    Permitido de <strong>Segunda a Sexta (08h às 17h)</strong> e <strong>Sábados (08h às 12h)</strong>. Domingo e feriados são estritamente proibidos para entrada de caminhão.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aviso Estrutural Crítico -->
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex items-start gap-3 shadow-sm">
+                    <div class="text-amber-600 text-lg flex-shrink-0 mt-0.5">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="text-xs space-y-1">
+                        <span class="font-bold text-amber-900 block">Atenção às Paredes Estruturais (Concreto)</span>
+                        <p class="text-amber-800 leading-relaxed text-[11px]">
+                            As casas possuem paredes de concreto estrutural. É <strong>terminantemente proibido</strong> abrir vãos, quebrar alvenaria ou rasgar paredes para tubulações sem laudo de engenharia. Risco grave de perda de garantia da construtora.
+                        </p>
+                        <button onclick="openFaqItem('faq-accordion-1')" class="text-brand-orange font-bold text-[11px] inline-flex items-center gap-1 hover:underline pt-0.5">
+                            Ver regras detalhadas de furos <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==================== ABA 2: QUADRO DE AVISOS ==================== -->
+            <div id="tab-avisos" class="tab-content space-y-4">
+                <div class="flex items-center justify-between px-1">
+                    <div>
+                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Quadro de Comunicações</h2>
+                        <p class="text-xs font-bold text-brand-blue">Atualizações e Decisões da Gestão</p>
+                    </div>
+                    <span class="text-[10px] bg-brand-blue/10 text-brand-blue font-semibold px-2 py-0.5 rounded-full">4 Avisos</span>
+                </div>
+
+                <!-- Categorias de Filtro -->
+                <div class="flex gap-1.5 overflow-x-auto pb-1 text-xs -mx-1 px-1">
+                    <button onclick="filterAvisos('all', this)" class="notice-filter-btn active bg-brand-blue text-white px-3 py-1.5 rounded-xl font-medium text-[11px] whitespace-nowrap shadow-sm">Todos</button>
+                    <button onclick="filterAvisos('gestao', this)" class="notice-filter-btn bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-xl font-medium text-[11px] whitespace-nowrap">Gestão</button>
+                    <button onclick="filterAvisos('obras', this)" class="notice-filter-btn bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-xl font-medium text-[11px] whitespace-nowrap">Obras e Reformas</button>
+                    <button onclick="filterAvisos('lazer', this)" class="notice-filter-btn bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-xl font-medium text-[11px] whitespace-nowrap">Lazer e Convívio</button>
+                </div>
+
+                <!-- Lista de Avisos -->
+                <div class="space-y-3" id="notices-list">
+
+                    <!-- Aviso 1 -->
+                    <div class="notice-card gestao bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-brand-orange bg-orange-50 px-2 py-0.5 rounded uppercase">Gestão & Chaves</span>
+                            <span class="text-[10px] text-slate-400 flex items-center gap-1"><i class="fa-regular fa-clock"></i> 02/10/2026</span>
+                        </div>
+                        <h3 class="text-xs font-bold text-brand-blue">Procedimento de Entrega das Chaves e Vistorias</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Moradores que identificaram pendências na vistoria de entrega da Telesil devem formalizar a abertura de chamado no SAC oficial da construtora antes de iniciar qualquer reforma interna.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-400">Responsável: Síndico Geral</span>
+                            <button onclick="openNoticeModal('Procedimento de Entrega das Chaves', 'Moradores que identificaram pendências na vistoria de entrega da Telesil devem formalizar a abertura de chamado no SAC oficial da construtora antes de iniciar qualquer reforma interna. Para itens de garantia estrutural e hidráulica, guarde todos os protocolos de atendimento. O prazo da construtora para retorno varia de 5 a 15 dias úteis.')" class="text-brand-orange font-semibold hover:underline">
+                                Ler Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aviso 2 -->
+                    <div class="notice-card obras bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase">Obras & Entulho</span>
+                            <span class="text-[10px] text-slate-400 flex items-center gap-1"><i class="fa-regular fa-clock"></i> 29/09/2026</span>
+                        </div>
+                        <h3 class="text-xs font-bold text-brand-blue">Descarte de Entulho e Caçambas nas Ruas</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            É expressamente proibido descartar restos de piso, cimento e tintas no depósito de lixo comum. Cada proprietário deve contratar caçamba individual identificada com o número da casa.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-400">Responsável: Administração</span>
+                            <button onclick="openNoticeModal('Descarte de Entulho e Caçambas', 'É expressamente proibido descartar entulho, sacos de gesso e restos de materiais nas lixeiras comunitárias do condomínio. As caçambas devem ser colocadas exclusivamente na vaga da sua residência, sem obstruir calçadas ou a circulação de outros veículos. O descumprimento gera notificação imediata com aplicação de multa prevista no Regimento Interno.')" class="text-brand-orange font-semibold hover:underline">
+                                Ler Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aviso 3 -->
+                    <div class="notice-card lazer bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded uppercase">Lazer</span>
+                            <span class="text-[10px] text-slate-400 flex items-center gap-1"><i class="fa-regular fa-clock"></i> 27/09/2026</span>
+                        </div>
+                        <h3 class="text-xs font-bold text-brand-blue">Regras de Liberação da Área da Piscina e Quiosques</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            As piscinas já estão tratadas e liberadas para moradores e dependentes. É proibida a entrada com garrafas ou copos de vidro em todo o perímetro molhado.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-400">Responsável: Comissão de Lazer</span>
+                            <button onclick="openNoticeModal('Regras de Liberação da Piscina', 'A piscina funciona de Terça a Domingo das 08h às 21h (Segunda-feira fechada para manutenção química). Menores de 12 anos só podem permanecer acompanhados dos responsáveis legais. Não é permitido som alto com caixas amplificadas individuais na área comum.')" class="text-brand-orange font-semibold hover:underline">
+                                Ler Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aviso 4 -->
+                    <div class="notice-card gestao bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded uppercase">Portaria</span>
+                            <span class="text-[10px] text-slate-400 flex items-center gap-1"><i class="fa-regular fa-clock"></i> 25/09/2026</span>
+                        </div>
+                        <h3 class="text-xs font-bold text-brand-blue">Entregadores e Delivery (iFood, Encomendas)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Por motivos de segurança coletiva aprovada em assembleia geral de instalação, entregadores de moto e encomendas não sobem até a porta das residências. O morador deve descer à portaria.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-400">Responsável: Segurança Condominial</span>
+                            <button onclick="openNoticeModal('Segurança e Delivery na Portaria', 'Para a segurança de todas as famílias e manutenção do controle rigoroso da portaria 24h, nenhum prestador de serviço de delivery externo está autorizado a circular desacompanhado pelas vias internas. O condômino será avisado via interfone ou aplicativo para retirar a entrega na eclusa da portaria.')" class="text-brand-orange font-semibold hover:underline">
+                                Ler Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ==================== ABA 3: SERVIÇOS & DOCUMENTOS ==================== -->
+            <div id="tab-servicos" class="tab-content space-y-4">
+                
+                <!-- Documentos Oficiais -->
+                <div id="section-documentos">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1">Documentos & Manuais</h2>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100 overflow-hidden">
+                        <a href="javascript:void(0)" onclick="openDocInfo('Regimento Interno', 'Contém as regras de convivência, horários de silêncio, uso de áreas comuns, multas e deveres dos condôminos.')" class="card-press flex items-center justify-between p-3.5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-base">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Regimento Interno Oficial</h4>
+                                    <p class="text-[10px] text-slate-400">PDF • Aprovado em Assembleia</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-brand-orange font-medium flex items-center gap-1">
+                                Ver <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </a>
+
+                        <a href="javascript:void(0)" onclick="openDocInfo('Convenção do Condomínio', 'Documento jurídico matriz registrado em cartório que regulamenta a administração, fração ideal e despesas do residencial.')" class="card-press flex items-center justify-between p-3.5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 text-brand-blue flex items-center justify-center text-base">
+                                    <i class="fa-solid fa-scale-balanced"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Convenção de Condomínio</h4>
+                                    <p class="text-[10px] text-slate-400">PDF • Registro Cartorial</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-brand-orange font-medium flex items-center gap-1">
+                                Ver <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </a>
+
+                        <a href="javascript:void(0)" onclick="openDocInfo('Manual do Proprietário - Telesil', 'Manual técnico da construtora explicando a garantia da edificação, especificações elétricas, hidráulicas e cuidados nas reformas.')" class="card-press flex items-center justify-between p-3.5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-brand-orange flex items-center justify-center text-base">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Manual do Proprietário Telesil</h4>
+                                    <p class="text-[10px] text-slate-400">Garantias & Prazos da Construtora</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-brand-orange font-medium flex items-center gap-1">
+                                Ver <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Provedores de Fibra -->
+                <div id="section-internet">
+                    <div class="flex items-center justify-between mb-2.5 px-1">
+                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Provedores de Internet Fibra</h2>
+                        <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded">Homologados</span>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <!-- Provedor 1 -->
+                        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                                        <i class="fa-solid fa-wifi"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-800">Maxx Fibra Telecom</h4>
+                                        <p class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Disponível em todas as ruas
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 font-medium px-2 py-0.5 rounded">Instalação Grátis</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-snug">
+                                Planos a partir de 400 Mega com suporte local e cabeamento subterrâneo já ativado nos postes internos.
+                            </p>
+                            <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-brand-blue">A partir de R$ 79,90/mês</span>
+                                <button onclick="contactProvider('Maxx Fibra', '5582999990001')" class="card-press bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
+                                    <i class="fa-brands fa-whatsapp text-xs"></i> Chamar no Whats
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Provedor 2 -->
+                        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                        <i class="fa-solid fa-network-wired"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-800">Alagoas Web Fibra</h4>
+                                        <p class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Ruas 01 a 15 Liberadas
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 font-medium px-2 py-0.5 rounded">Wi-Fi 6 Incluso</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-snug">
+                                Conexão de alta estabilidade e planos com desconto nos 3 primeiros meses para recém-moradores.
+                            </p>
+                            <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-brand-blue">A partir de R$ 89,90/mês</span>
+                                <button onclick="contactProvider('Alagoas Web', '5582999990002')" class="card-press bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
+                                    <i class="fa-brands fa-whatsapp text-xs"></i> Chamar no Whats
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Áreas de Lazer e Reservas -->
+                <div id="section-lazer">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1">Espaços de Lazer & Reserva</h2>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="openAmenityModal('Piscina Adulto & Infantil', '08h às 21h (Fechada na Segunda para manutenção)', 'Proibido som mecânico, garrafas de vidro, animais de estimação na área de borda e crianças desacompanhadas de responsáveis.')" class="card-press bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2.5 text-left">
+                            <div class="w-8 h-8 rounded-xl bg-sky-50 text-sky-500 flex items-center justify-center text-sm flex-shrink-0">
+                                <i class="fa-solid fa-water"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-slate-800 block">Piscinas</span>
+                                <span class="text-[10px] text-slate-400">Ver horários</span>
+                            </div>
+                        </button>
+
+                        <button onclick="openAmenityModal('Salão de Festas', '09h às 23h (Necessário agendamento prévio)', 'Reserva com taxa de limpeza simbólica. Permitido até 60 convidados. Som deve ser desligado impreterivelmente às 22:00.')" class="card-press bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2.5 text-left">
+                            <div class="w-8 h-8 rounded-xl bg-orange-50 text-brand-orange flex items-center justify-center text-sm flex-shrink-0">
+                                <i class="fa-solid fa-champagne-glasses"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-slate-800 block">Salão Festas</span>
+                                <span class="text-[10px] text-slate-400">Regras e Taxa</span>
+                            </div>
+                        </button>
+
+                        <button onclick="openAmenityModal('Quiosque com Churrasqueira', '10h às 22h (Com agendamento)', 'Deixar a churrasqueira limpa e com cinzas apagadas após o uso. É proibido o uso de carvão fora do compartimento refratário.')" class="card-press bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2.5 text-left">
+                            <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-sm flex-shrink-0">
+                                <i class="fa-solid fa-fire-burner"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-slate-800 block">Churrasqueira</span>
+                                <span class="text-[10px] text-slate-400">Como agendar</span>
+                            </div>
+                        </button>
+
+                        <button onclick="openAmenityModal('Quadra Poliesportiva', '08h às 22h (Livre com bom senso)', 'Uso por ordem de chegada com revezamento a cada 30 minutos em caso de fila de espera. Proibido calçados com travas de futebol de campo.')" class="card-press bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2.5 text-left">
+                            <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center text-sm flex-shrink-0">
+                                <i class="fa-solid fa-volleyball"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-slate-800 block">Quadra</span>
+                                <span class="text-[10px] text-slate-400">Regras de uso</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==================== ABA 4: DÚVIDAS FREQUENTES (FAQ) ==================== -->
+            <div id="tab-faq" class="tab-content space-y-4">
+                <div class="px-1">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Perguntas Mais Comuns</h2>
+                    <p class="text-xs font-bold text-brand-blue">Tire dúvidas rápidas sobre convivência e normas</p>
+                </div>
+
+                <div class="space-y-2.5" id="faq-accordion-container">
+                    
+                    <!-- FAQ 1: Paredes de concreto -->
+                    <div id="faq-accordion-1" class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition">
+                        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-hammer text-brand-orange text-sm"></i>
+                                <span class="text-xs font-bold text-slate-800">Posso furar ou quebrar paredes da casa?</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content hidden px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                            <p class="mb-2"><strong>Atenção máxima:</strong> As casas do residencial são construídas em <strong>concreto estrutural (paredes de concreto armado)</strong>.</p>
+                            <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-700">
+                                <li><strong>Proibido:</strong> Abrir vãos de portas, quebrar paredes, embutir nichos profundos ou passar canos que cortem a malha de ferro estrutural.</li>
+                                <li><strong>Permitido com cautela:</strong> Pequenos furos de broca (tamanho 6mm ou 8mm) para pendurar quadros, suportes de TV ou armários aéreos, sempre usando detector de canos ou respeitando a planta hidráulica para não furar canos de água.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2: Animais / Pets -->
+                    <div id="faq-accordion-2" class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition">
+                        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-paw text-brand-orange text-sm"></i>
+                                <span class="text-xs font-bold text-slate-800">Quais as regras para cães e gatos?</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content hidden px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                            <p class="mb-1 text-[11px]">É permitido ter animais domésticos de pequeno a médio porte em sua casa, observando:</p>
+                            <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-700">
+                                <li>Nas ruas do condomínio, os cães devem sempre estar com <strong>coleira e guia</strong> conduzidos por adultos.</li>
+                                <li>É obrigação estrita do tutor recolher as fezes imediatamente com saquinho plástico.</li>
+                                <li>Latidos excessivos e contínuos que infrinjam o sossego da vizinhança podem ser objeto de notificação.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3: Horários de silêncio e barulho de reformas -->
+                    <div id="faq-accordion-3" class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition">
+                        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-volume-high text-brand-orange text-sm"></i>
+                                <span class="text-xs font-bold text-slate-800">Qual o horário de silêncio e reformas?</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content hidden px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                            <div class="space-y-2 text-[11px]">
+                                <div>
+                                    <span class="font-bold text-brand-blue">Obras e barulhos de impacto (furadeiras, marretas):</span>
+                                    <p>Segunda a Sexta: das <strong>08:00 às 17:00</strong>. Sábados: das <strong>08:00 às 12:00</strong>. Domingos e Feriados: <em>Proibido</em>.</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-brand-blue">Horário de Silêncio Noturno Geral:</span>
+                                    <p>A partir das <strong>22:00 até às 07:00</strong> do dia seguinte, mesmo aos finais de semana.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4: Vagas de garagem e carros -->
+                    <div id="faq-accordion-4" class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition">
+                        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-car text-brand-orange text-sm"></i>
+                                <span class="text-xs font-bold text-slate-800">Como funciona o estacionamento e vagas?</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content hidden px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                            <p class="text-[11px] leading-relaxed">
+                                Cada residência possui direito a 1 vaga demarcada em frente ao seu lote ou bolsão de estacionamento designado pela planta da Telesil. Não é permitido estacionar carros ou motos nas calçadas ou na contramão das ruas internas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5: Lixo e Coleta Seletiva -->
+                    <div id="faq-accordion-5" class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition">
+                        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-trash-can text-brand-orange text-sm"></i>
+                                <span class="text-xs font-bold text-slate-800">Onde colocar o lixo e dias de coleta?</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                        </button>
+                        <div class="faq-content hidden px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                            <p class="text-[11px] leading-relaxed">
+                                O lixo doméstico deve ser devidamente ensacado em sacolas resistentes e depositado nas lixeiras comunitárias centrais após as 18h. Nunca deixe sacolas no chão em frente à sua casa para evitar animais rasgando os resíduos.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Suporte Adicional -->
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-center space-y-2">
+                    <p class="text-xs font-bold text-brand-blue">Não encontrou o que precisava?</p>
+                    <p class="text-[11px] text-slate-600">A equipe da administração está disponível no horário comercial para auxiliar.</p>
+                    <button onclick="openSindicoModal()" class="card-press bg-brand-blue text-white text-xs font-semibold px-4 py-2 rounded-xl inline-flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-emerald-400"></i> Falar com a Administração
+                    </button>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- ==================== BARRA DE NAVEGAÇÃO INFERIOR ==================== -->
+        <nav class="absolute bottom-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 pb-safe flex justify-around items-center z-20 shadow-[0_-8px_20px_-2px_rgba(0,0,0,0.06)] md:rounded-b-[2.3rem]">
+            
+            <button onclick="switchTab('home', this)" class="nav-item active flex flex-col items-center gap-1 text-slate-400 py-1 w-16 group">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] tracking-tight">Início</span>
+            </button>
+
+            <button onclick="switchTab('avisos', this)" class="nav-item flex flex-col items-center gap-1 text-slate-400 py-1 w-16 group relative">
+                <div class="absolute top-0.5 right-3.5 w-2 h-2 rounded-full bg-brand-orange pulse-dot"></div>
+                <i class="fa-solid fa-bullhorn text-lg"></i>
+                <span class="text-[10px] tracking-tight">Avisos</span>
+            </button>
+
+            <button onclick="switchTab('servicos', this)" class="nav-item flex flex-col items-center gap-1 text-slate-400 py-1 w-16 group">
+                <i class="fa-solid fa-folder-open text-lg"></i>
+                <span class="text-[10px] tracking-tight">Serviços</span>
+            </button>
+
+            <button onclick="switchTab('faq', this)" class="nav-item flex flex-col items-center gap-1 text-slate-400 py-1 w-16 group">
+                <i class="fa-solid fa-circle-question text-lg"></i>
+                <span class="text-[10px] tracking-tight">Dúvidas</span>
+            </button>
+
+        </nav>
+
+        <!-- ==================== MODAIS ==================== -->
+
+        <!-- MODAL: Portaria & Ligações -->
+        <div id="modal-portaria" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-50 text-brand-blue flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-brand-blue">Central da Portaria</h3>
+                    </div>
+                    <button onclick="closeModal('modal-portaria')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <p class="text-slate-600 leading-snug">
+                        A portaria opera 24h para controle de acesso, encomendas e emergências locais no condomínio.
+                    </p>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-1 text-center">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Telefone Portaria Principal</span>
+                        <div class="text-base font-extrabold text-brand-blue">(82) 98822-0000</div>
+                        <span class="text-[10px] text-slate-500 block">Ramal Interno pelo Interfone: <strong>94</strong></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <a href="tel:+5582988220000" class="card-press bg-brand-blue text-white text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-phone"></i> Fazer Ligação
+                    </a>
+                    <button onclick="copyToClipboard('(82) 98822-0000', 'Número da portaria copiado!')" class="card-press bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Copiar Número
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: WhatsApp Síndico -->
+        <div id="modal-sindico" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-brand-blue">Administração & Síndico</h3>
+                    </div>
+                    <button onclick="closeModal('modal-sindico')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-600 leading-snug">
+                    Envie sua mensagem informando sempre o <strong>número da sua casa</strong> para agilizar o atendimento.
+                </p>
+
+                <div class="bg-emerald-50/60 border border-emerald-100 p-3 rounded-2xl space-y-1.5 text-xs">
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-slate-500">Horário de Resposta:</span>
+                        <span class="font-bold text-slate-700">Seg a Sex • 08h às 18h</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-slate-500">Urgências de vazamento:</span>
+                        <span class="font-bold text-rose-600">Portaria 24h</span>
+                    </div>
+                </div>
+
+                <a href="https://wa.me/5582999990000?text=Ol%C3%A1%2C%20sou%20morador%20do%20Reserva%20dos%20P%C3%A1ssaros%20(Casa%3A%20____)%20e%20gostaria%20de%20um%20esclarecimento." target="_blank" class="card-press w-full bg-emerald-500 hover:bg-emerald-600 text-white text-center py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Iniciar Conversa no WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <!-- MODAL: PIX e Taxa Condominial -->
+        <div id="modal-pix" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-brand-blue">Taxa Condominial & PIX</h3>
+                    </div>
+                    <button onclick="closeModal('modal-pix')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center space-y-1">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase">Chave PIX Oficial (CNPJ)</span>
+                        <div class="font-mono font-bold text-brand-blue select-all text-xs bg-white p-2 rounded-lg border border-slate-200 break-all" id="pix-key-val">
+                            12.345.678/0001-90
+                        </div>
+                        <p class="text-[10px] text-slate-500">Beneficiário: Condomínio Residencial Reserva dos Pássaros</p>
+                    </div>
+
+                    <p class="text-[11px] text-slate-500 leading-snug">
+                        * Ao pagar por transferência PIX, envie o comprovante com o número do seu lote/casa para o WhatsApp da Administração para baixa financeira.
+                    </p>
+                </div>
+
+                <button onclick="copyToClipboard('12.345.678/0001-90', 'Chave PIX (CNPJ) copiada com sucesso!')" class="card-press w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-solid fa-copy"></i> Copiar Chave PIX
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL: Telefones de Emergência -->
+        <div id="modal-emergencia" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-truck-medical"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-brand-blue">Telefones Úteis e Emergência</h3>
+                    </div>
+                    <button onclick="closeModal('modal-emergencia')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <a href="tel:190" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-shield-cat text-blue-600 text-base"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">Polícia Militar</span>
+                                <span class="text-[10px] text-slate-400">Rondas e ocorrências</span>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-blue-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200">190</span>
+                    </a>
+
+                    <a href="tel:192" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-heart-pulse text-rose-600 text-base"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">SAMU (Ambulância)</span>
+                                <span class="text-[10px] text-slate-400">Socorro médico de urgência</span>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-rose-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200">192</span>
+                    </a>
+
+                    <a href="tel:193" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-fire text-amber-600 text-base"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">Corpo de Bombeiros</span>
+                                <span class="text-[10px] text-slate-400">Vazamentos e incêndios</span>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold text-amber-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200">193</span>
+                    </a>
+
+                    <a href="tel:08000820196" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-bolt-lightning text-yellow-500 text-base"></i>
+                            <div>
+                                <span class="font-bold text-slate-800 block">Equatorial Alagoas</span>
+                                <span class="text-[10px] text-slate-400">Falta de luz no condomínio</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-slate-600 bg-white px-2 py-1 rounded-lg border border-slate-200">0800 082 0196</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: Detalhe de Aviso ou Documento -->
+        <div id="modal-info" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <h3 id="modal-info-title" class="text-sm font-bold text-brand-blue">Informação</h3>
+                    <button onclick="closeModal('modal-info')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="modal-info-body" class="text-xs text-slate-600 leading-relaxed space-y-2">
+                    <!-- Conteúdo inserido dinamicamente -->
+                </div>
+                <button onclick="closeModal('modal-info')" class="card-press w-full bg-brand-blue text-white py-2.5 rounded-xl font-bold text-xs">
+                    Entendido
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL: Regras de Espaço de Lazer -->
+        <div id="modal-amenity" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <h3 id="modal-amenity-title" class="text-sm font-bold text-brand-blue">Regras de Lazer</h3>
+                    <button onclick="closeModal('modal-amenity')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="bg-orange-50/70 border border-orange-100 p-2.5 rounded-xl text-xs space-y-1">
+                    <span class="text-[10px] font-bold uppercase text-brand-orange tracking-wider">Horário de Funcionamento</span>
+                    <p id="modal-amenity-hours" class="font-bold text-slate-800 text-xs">08:00 às 22:00</p>
+                </div>
+                <div class="text-xs text-slate-600 space-y-1">
+                    <span class="font-bold text-slate-800 block">Normas e Regulamento:</span>
+                    <p id="modal-amenity-rules" class="leading-relaxed text-[11px]"></p>
+                </div>
+                <button onclick="closeModal('modal-amenity')" class="card-press w-full bg-brand-orange text-white py-2.5 rounded-xl font-bold text-xs">
+                    Fechar
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL: Compartilhar no WhatsApp -->
+        <div id="modal-share" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-3 text-center">
+                <div class="w-12 h-12 rounded-full bg-orange-50 text-brand-orange flex items-center justify-center text-xl mx-auto">
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
+                <h3 class="text-sm font-bold text-brand-blue">Compartilhe com a vizinhança</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Envie o link do portal nos grupos de WhatsApp dos vizinhos para que todos tenham acesso fácil às regras e telefones.
+                </p>
+                <div class="pt-2 space-y-2">
+                    <button onclick="shareDirectWhatsApp()" class="card-press w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow">
+                        <i class="fa-brands fa-whatsapp text-base"></i> Enviar no Grupo de Vizinhos
+                    </button>
+                    <button onclick="copyToClipboard(window.location.href, 'Link do portal copiado!')" class="card-press w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-link"></i> Copiar Link da Página
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: Atalho na Tela Inicial (PWA) -->
+        <div id="modal-pwa" class="modal-overlay modal-hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="modal-content w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <h3 class="text-sm font-bold text-brand-blue flex items-center gap-2">
+                        <i class="fa-solid fa-mobile-screen-button text-brand-orange"></i> Como Usar Como Aplicativo
+                    </h3>
+                    <button onclick="closeModal('modal-pwa')" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p class="text-xs text-slate-600 leading-snug">
+                    Você pode salvar este portal direto na tela do seu celular como se fosse um app da loja, sem ocupar memória!
+                </p>
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                    <div class="flex items-start gap-2">
+                        <i class="fa-brands fa-android text-emerald-600 text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold text-slate-800">No Android (Google Chrome):</span>
+                            <p class="text-[11px] text-slate-500">Toque no botão <strong>"Instalar"</strong> que aparece na tela ou nos 3 pontinhos e escolha <strong>"Instalar aplicativo"</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 pt-2 border-t border-slate-200">
+                        <i class="fa-brands fa-apple text-slate-800 text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold text-slate-800">No iPhone (Safari):</span>
+                            <p class="text-[11px] text-slate-500">Toque no botão de <strong>Compartilhar (quadrado com a seta para cima)</strong> e escolha <strong>"Adicionar à Tela de Início"</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 pt-2 border-t border-slate-200">
+                        <i class="fa-brands fa-windows text-blue-600 text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold text-slate-800">No Computador (Chrome / Edge):</span>
+                            <p class="text-[11px] text-slate-500">Clique no ícone de <strong>computador com seta</strong> na barra de endereços para instalar no Windows ou Mac.</p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-pwa')" class="card-press w-full bg-brand-blue text-white py-2.5 rounded-xl font-bold text-xs">
+                    Entendi, obrigado!
+                </button>
+            </div>
+        </div>
+
+        <!-- Banner Flutuante de Confirmação (Toast) -->
+        <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-full text-xs font-semibold shadow-2xl flex items-center gap-2 pointer-events-none opacity-0 transition-opacity duration-300">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+            <span id="toast-message">Mensagem copiada</span>
+        </div>
+
+    </div>
+
+    <!-- Script Principal da Aplicação -->
+    <script src="js/app.js"></script>
+</body>
+</html>
